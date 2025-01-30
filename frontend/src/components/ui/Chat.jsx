@@ -29,7 +29,7 @@ const Chat = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/gemini', {
+            const response = await axios.post('https://aot-fanpage.onrender.com/gemini', {
                 prompt: newMessage,
             });
             console.log(response);
