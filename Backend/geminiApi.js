@@ -31,11 +31,32 @@ async function runGemini(prompt) {
     });
     const result = await chatSession.sendMessage(prompt); // use the parameter
 
-    return result.response.text(); // return the result
+    // Escape Markdown characters
+    const responseText = result.response.text();
+    const escapedText = escapeMarkdown(responseText);
+
+    return escapedText; // return the escaped result
   } catch (error) {
     console.error("Error in Gemini API call:", error);
     throw new Error(`Gemini API error: ${error.message}`); // Re-throw the error with a clearer message
   }
 }
+
+function escapeMarkdown(text) {
+  // Escapes common Markdown characters that might cause formatting issues.
+  // Added more robust escaping using regular expressions.
+  let escapedText = text.replace(/#/g, '\\#');   // Escape '#'
+  escapedText = escapedText.replace(/\*/g, '\\*');   // Escape '*'
+  escapedText = escapedText.replace(/>/g, '\\>');   // Escape '>'
+  escapedText = escapedText.replace(/_/g, '\\_');   // Escape '_'
+  escapedText = escapedText.replace(/`/g, '\\`');   // Escape '`' (backtick)
+  escapedText = escapedText.replace(/!/g, '\\!');   // Escape '!'
+  escapedText = escapedText.replace(/\[/g, '\\[');   // Escape '['
+  escapedText = escapedText.replace(/\]/g, '\\]');   // Escape ']'
+  escapedText = escapedText.replace(/\(/g, '\\(');   // Escape '('
+  escapedText = escapedText.replace(/\)/g, '\\)');   // Escape ')'
+  return escapedText;
+}
+
 
 export { runGemini };
